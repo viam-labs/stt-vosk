@@ -8,3 +8,7 @@ wheels/
 
 # venv
 .venv
+
+# build & bundle files
+module.tar.gz
+.DS_Store

@@ -7,9 +7,9 @@ authors = [
 ]
 dependencies = [
     "viam-sdk>=0.15.0",
-    "numpy>=1.26.4",
-    "sounddevice>=0.4.6",
     "vosk>=0.3.44",
+    "speechrecognition>=3.10.1",
+    "pyaudio>=0.2.14",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

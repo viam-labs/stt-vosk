@@ -11,7 +11,6 @@
 certifi==2024.2.2
     # via requests
 cffi==1.16.0
-    # via sounddevice
     # via vosk
 charset-normalizer==3.3.2
     # via requests
@@ -29,24 +28,26 @@ idna==3.6
     # via requests
 multidict==6.0.5
     # via grpclib
-numpy==1.26.4
-    # via stt-vosk
 pillow==10.2.0
     # via viam-sdk
 protobuf==4.25.3
     # via googleapis-common-protos
     # via viam-sdk
+pyaudio==0.2.14
+    # via stt-vosk
 pycparser==2.21
     # via cffi
 requests==2.31.0
+    # via speechrecognition
     # via vosk
-sounddevice==0.4.6
+speechrecognition==3.10.1
     # via stt-vosk
 srt==3.5.3
     # via vosk
 tqdm==4.66.2
     # via vosk
 typing-extensions==4.10.0
+    # via speechrecognition
     # via viam-sdk
 urllib3==2.2.1
     # via requests
