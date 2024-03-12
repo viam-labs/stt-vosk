@@ -1,9 +1,12 @@
 import asyncio
+import base64
 from collections.abc import Mapping, Sequence
+from io import BytesIO
 import json
-from typing import ClassVar, Optional
+from typing import ClassVar, Optional, Literal
 from typing_extensions import Self
 
+from pydub import AudioSegment
 from viam.logging import getLogger
 from viam.module.module import Reconfigurable
 from viam.proto.common import ResourceName
@@ -69,18 +72,18 @@ class SttVosk(Generic, Reconfigurable):
         LOGGER.info(f"received {command=}.")
         for name, args in command.items():
             if name == "listen":
-                result = await self.listen(*args)
+                result = self.listen()
                 return {"listen": result}
+            if name == "to_text":
+                assert isinstance(args, list)
+                result = self.to_text(*args)
+                return {"to_text": result}
             else:
                 LOGGER.warning(f"Unknown command: {name}")
                 return {}
         return {}
 
-    async def listen(self) -> str:
-        with sr.Microphone() as source:
-            LOGGER.debug("Listening...")
-            audio = self.recognizer.listen(source)
-
+    def convert_audio(self, audio: sr.AudioData) -> str:
         try:
             result = json.loads(self.recognizer.recognize_vosk(audio))
             return result["text"]
@@ -88,3 +91,25 @@ class SttVosk(Generic, Reconfigurable):
             LOGGER.error("There was an issue listening for speech recognition")
             LOGGER.error(error)
             return ""
+
+    def listen(self) -> str:
+        with sr.Microphone() as source:
+            LOGGER.debug("Listening...")
+            audio = self.recognizer.listen(source)
+
+        return self.convert_audio(audio)
+
+    def to_text(
+        self,
+        data: str,  # base64 encoded string of audio data
+        format: Literal["wav", "mp3", "ogg", "flv", "mp4", "wma", "aac"] = "wav",
+    ):
+        speech = BytesIO(base64.b64decode(data))
+
+        if format != "mp3":
+            segment = AudioSegment.from_file(speech, format=format)
+            speech = BytesIO()
+            segment.export(speech, format="wav")
+
+        with sr.AudioFile(speech) as source:
+            return self.convert_audio(self.recognizer.record(source))

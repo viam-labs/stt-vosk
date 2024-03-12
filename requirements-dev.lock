@@ -37,6 +37,8 @@ pyaudio==0.2.14
     # via stt-vosk
 pycparser==2.21
     # via cffi
+pydub==0.25.1
+    # via stt-vosk
 requests==2.31.0
     # via speechrecognition
     # via vosk
