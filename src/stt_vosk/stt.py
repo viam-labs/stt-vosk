@@ -1,9 +1,8 @@
 import asyncio
-import base64
 from collections.abc import Mapping, Sequence
 from io import BytesIO
 import json
-from typing import ClassVar, Optional, Literal
+from typing import ClassVar, Literal
 from typing_extensions import Self
 
 from pydub import AudioSegment
@@ -13,16 +12,16 @@ from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.proto.app.robot import ComponentConfig
 from viam.resource.types import Model, ModelFamily
-from viam.services.generic import Generic
-from viam.utils import struct_to_dict, ValueTypes
+from viam.utils import struct_to_dict
 
 import speech_recognition as sr
 from vosk import Model as VoskModel
+from speech_service_api import SpeechService
 
 LOGGER = getLogger(__name__)
 
 
-class SttVosk(Generic, Reconfigurable):
+class SttVosk(SpeechService, Reconfigurable):
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "stt-vosk"), "stt-vosk")
 
     q: asyncio.Queue
@@ -62,27 +61,6 @@ class SttVosk(Generic, Reconfigurable):
     async def close(self):
         LOGGER.info(f"{self.name} is closed.")
 
-    async def do_command(
-        self,
-        command: Mapping[str, ValueTypes],
-        *,
-        timeout: Optional[float] = None,
-        **kwargs,
-    ) -> Mapping[str, ValueTypes]:
-        LOGGER.info(f"received {command=}.")
-        for name, args in command.items():
-            if name == "listen":
-                result = self.listen()
-                return {"listen": result}
-            if name == "to_text":
-                assert isinstance(args, list)
-                result = self.to_text(*args)
-                return {"to_text": result}
-            else:
-                LOGGER.warning(f"Unknown command: {name}")
-                return {}
-        return {}
-
     def convert_audio(self, audio: sr.AudioData) -> str:
         try:
             result = json.loads(self.recognizer.recognize_vosk(audio))
@@ -92,24 +70,24 @@ class SttVosk(Generic, Reconfigurable):
             LOGGER.error(error)
             return ""
 
-    def listen(self) -> str:
+    async def listen(self) -> str:
         with sr.Microphone() as source:
             LOGGER.debug("Listening...")
             audio = self.recognizer.listen(source)
 
         return self.convert_audio(audio)
 
-    def to_text(
+    async def to_text(
         self,
-        data: str,  # base64 encoded string of audio data
-        format: Literal["wav", "mp3", "ogg", "flv", "mp4", "wma", "aac"] = "wav",
+        speech: bytes,
+        format: str | Literal["wav", "mp3", "ogg", "flv", "mp4", "wma", "aac"] = "wav",
     ):
-        speech = BytesIO(base64.b64decode(data))
+        audio = BytesIO(speech)
 
-        if format != "mp3":
-            segment = AudioSegment.from_file(speech, format=format)
-            speech = BytesIO()
-            segment.export(speech, format="wav")
+        if format != "wav":
+            segment = AudioSegment.from_file(audio, format=format)
+            audio = BytesIO()
+            segment.export(audio, format="wav")
 
-        with sr.AudioFile(speech) as source:
+        with sr.AudioFile(audio) as source:
             return self.convert_audio(self.recognizer.record(source))
