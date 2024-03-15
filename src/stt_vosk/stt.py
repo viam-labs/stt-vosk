@@ -22,7 +22,7 @@ LOGGER = getLogger(__name__)
 
 
 class SttVosk(SpeechService, Reconfigurable):
-    MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "stt-vosk"), "stt-vosk")
+    MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "speech"), "stt-vosk")
 
     q: asyncio.Queue
     recognizer: sr.Recognizer

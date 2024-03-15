@@ -21,7 +21,7 @@ if command -v apt-get; then
     fi
     $SUDO apt-get install -qqy python3-venv
   fi
-  $SUDO apt-get install -qqy flac python3-pyaudio ffmpeg
+  $SUDO apt-get install -qqy flac python3-pyaudio ffmpeg alsa-tools alsa-utils
 else
   echo "Skipping tool installation because your platform is missing apt-get"
   echo "If you see failures below, install the equivalent of python3-venv for your system"

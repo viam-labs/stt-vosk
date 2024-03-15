@@ -1,0 +1,13 @@
+{
+  "module_id": "viam-labs:stt-vosk",
+  "visibility": "public",
+  "url": "https://github.com/viam-labs/stt-vosk",
+  "description": "A modular service that provides speech-to-text (STT) capabilities for machines running on the Viam platform.",
+  "models": [
+    {
+      "api": "viam-labs:service:speech",
+      "model": "viam-labs:speech:stt-vosk"
+    }
+  ],
+  "entrypoint": "run.sh"
+}
