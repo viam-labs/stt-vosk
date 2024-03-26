@@ -1,4 +1,3 @@
-import asyncio
 from collections.abc import Mapping, Sequence
 from io import BytesIO
 import json
@@ -24,12 +23,10 @@ LOGGER = getLogger(__name__)
 class SttVosk(SpeechService, Reconfigurable):
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "speech"), "stt-vosk")
 
-    q: asyncio.Queue
     recognizer: sr.Recognizer
 
     def __init__(self, name: str) -> None:
         super().__init__(name)
-        self.q = asyncio.Queue()
 
     @classmethod
     def new(
@@ -91,3 +88,21 @@ class SttVosk(SpeechService, Reconfigurable):
 
         with sr.AudioFile(audio) as source:
             return self.convert_audio(self.recognizer.record(source))
+
+    async def to_speech(self, text: str):
+        raise NotImplementedError()
+
+    async def say(self, text: str, blocking: bool):
+        raise NotImplementedError()
+
+    async def completion(self, text: str, blocking: bool) -> str:
+        raise NotImplementedError()
+
+    async def get_commands(self, number: int) -> Sequence[str]:
+        raise NotImplementedError()
+
+    async def is_speaking(self) -> bool:
+        raise NotImplementedError()
+
+    async def listen_trigger(self, type: str) -> Sequence[str]:
+        raise NotImplementedError()
