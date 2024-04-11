@@ -42,6 +42,8 @@ pydub==0.25.1
 requests==2.31.0
     # via speechrecognition
     # via vosk
+setuptools==69.2.0
+    # via stt-vosk
 speech-service-api @ git+https://github.com/viam-labs/speech-service-api.git@cd37fc3316afcda58d1b4b590812a1005f54efdb
     # via stt-vosk
 speechrecognition==3.10.1
