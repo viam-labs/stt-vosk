@@ -6,7 +6,7 @@ from typing_extensions import Self
 
 from pydub import AudioSegment
 from viam.logging import getLogger
-from viam.module.module import Reconfigurable
+from viam.module.types import Reconfigurable
 from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.proto.app.robot import ComponentConfig

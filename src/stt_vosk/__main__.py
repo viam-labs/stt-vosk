@@ -8,7 +8,7 @@ from . import SttVosk
 
 async def main():
     module = Module.from_args()
-    module.add_model_from_registry(SpeechService.SUBTYPE, SttVosk.MODEL)
+    module.add_model_from_registry(SpeechService.API, SttVosk.MODEL)
     await module.start()
 
 

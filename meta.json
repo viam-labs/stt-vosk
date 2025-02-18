@@ -6,7 +6,9 @@
   "models": [
     {
       "api": "viam-labs:service:speech",
-      "model": "viam-labs:speech:stt-vosk"
+      "model": "viam-labs:speech:stt-vosk",
+      "markdown_link": "README.md#config",
+      "short_description": "Provides speech-to-text(STT) capabilities through a local model"
     }
   ],
   "entrypoint": "run.sh"
