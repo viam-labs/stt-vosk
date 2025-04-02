@@ -23,5 +23,5 @@ uv venv --python 3.12 $VENV_NAME
 
 source $VENV_NAME/bin/activate
 
-uv sync --active
+uv sync
 uv pip install pyinstaller
