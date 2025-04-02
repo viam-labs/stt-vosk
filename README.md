@@ -12,7 +12,7 @@ To use this module, follow these instructions to [add a module from the Viam Reg
 
 On Linux:
 
-`run.sh` will automatically install the following system dependencies if not already set up on the machine:
+`build.sh` will automatically include the following system dependencies as part of the PyInstaller executable:
 
 - `python3-pyaudio`
 - `ffmpeg`
@@ -20,7 +20,7 @@ On Linux:
 - `alsa-utils`
 - `flac`
 
-On MacOS, `run.sh` will install the following dependencies before adding the modular resource using [Homebrew](https://brew.sh):
+On MacOS, `build.sh` will include the following dependencies using [Homebrew](https://brew.sh):
 
 ``` bash
 brew install portaudio
@@ -58,17 +58,18 @@ The following attributes are available for the `viam-labs:speech:speechio` speec
 | `model_name` | string | Optional |  The name of the pre-trained [Vosk model](https://alphacephei.com/vosk/models) to be used. Default: `"vosk-model-small-en-us-0.15"`.  |
 | `model_lang` | string | Optional |  The spoken language for the model to process. Default: `"en-us"`. |
 | `mic_name`  | string | Optional |  The name of the hardware device used for audio input if more than one is available. Default: `"default"`. |
+| `disable_mic`  | boolean | Optional | If true, will not configure any listening capabilities. This must be set to true if you do not have a valid microphone attached to your system. Default: `false`. |
 
 > [!NOTE]
 > For more information, see [Configure a Machine](https://docs.viam.com/manage/configuration/).
 
 ## Contributing
 
-This project was bootstrapped and it managed by [`rye`](https://rye-up.com/). Follow the documentation for [installing rye](https://rye-up.com/guide/installation/) and then run the `sync` command in your local `git clone` of this project to get started:
+This project was bootstrapped and it managed by [`uv`](https://docs.astral.sh/uv/). Follow the documentation for [installing uv](https://docs.astral.sh/uv/#installation) and then run the `sync` command in your local `git clone` of this project to get started:
 
 ```console
 git clone https://github.com/viam-labs/stt-vosk && cd stt-vosk
-rye sync
+uv sync
 ```
 
 ## License: Apache-2.0

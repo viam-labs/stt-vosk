@@ -6,11 +6,11 @@ from typing_extensions import Self
 
 from pydub import AudioSegment
 from viam.logging import getLogger
-from viam.module.types import Reconfigurable
 from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
+from viam.resource.easy_resource import EasyResource
 from viam.proto.app.robot import ComponentConfig
-from viam.resource.types import Model, ModelFamily
+from viam.resource.types import Model
 from viam.utils import struct_to_dict
 
 import speech_recognition as sr
@@ -20,21 +20,16 @@ from speech_service_api import SpeechService
 LOGGER = getLogger(__name__)
 
 
-class SttVosk(SpeechService, Reconfigurable):
-    MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "speech"), "stt-vosk")
+class SttVosk(SpeechService, EasyResource):
+    MODEL: ClassVar[Model] = Model.from_string("viam-labs:speech:stt-vosk")
 
     recognizer: sr.Recognizer
-
-    def __init__(self, name: str) -> None:
-        super().__init__(name)
 
     @classmethod
     def new(
         cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
     ) -> Self:
-        stt = cls(config.name)
-        stt.reconfigure(config, dependencies)
-        return stt
+        return super().new(config, dependencies)
 
     @classmethod
     def validate_config(cls, config: ComponentConfig) -> Sequence[str]:
@@ -44,19 +39,21 @@ class SttVosk(SpeechService, Reconfigurable):
         self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
     ):
         attrs = struct_to_dict(config.attributes)
-        LOGGER.info(attrs)
-        model_name = attrs.get("model_name", "vosk-model-small-en-us-0.15")
-        model_lang = attrs.get("model_lang", "en-us")
-        self.mic_name = attrs.get("mic_name", "default")
+        LOGGER.debug(attrs)
+        model_name = str(attrs.get("model_name", "vosk-model-small-en-us-0.15"))
+        model_lang = str(attrs.get("model_lang", "en-us"))
+        self.disable_mic = bool(attrs.get("disable_mic", False))
+        self.mic_name = str(attrs.get("mic_name", "default"))
         self.recognizer = sr.Recognizer()
         self.recognizer.vosk_model = VoskModel(model_name=model_name, lang=model_lang)
 
-        LOGGER.debug("Calibrating for ambient noise")
-        with sr.Microphone() as source:
-            self.recognizer.adjust_for_ambient_noise(source)
+        if not self.disable_mic:
+            LOGGER.debug("Calibrating for ambient noise")
+            with sr.Microphone() as source:
+                self.recognizer.adjust_for_ambient_noise(source)
 
     async def close(self):
-        LOGGER.info(f"{self.name} is closed.")
+        LOGGER.debug(f"{self.name} is closed.")
 
     def convert_audio(self, audio: sr.AudioData) -> str:
         try:
@@ -68,6 +65,12 @@ class SttVosk(SpeechService, Reconfigurable):
             return ""
 
     async def listen(self) -> str:
+        if self.disable_mic:
+            LOGGER.warning(
+                "Microphone usage has been disabled. Change the configuration for `disable_mic` to enable listening."
+            )
+            return ""
+
         with sr.Microphone() as source:
             LOGGER.debug("Listening...")
             audio = self.recognizer.listen(source)

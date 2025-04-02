@@ -1,17 +1,18 @@
 install:
-	rye sync
-
-bundle:
-	tar -czf module.tar.gz *.sh src dist meta.json
-
-upload:
-	viam module upload --version $(version) --platform any module.tar.gz
+	uv sync
 
 clean:
-	rm module.tar.gz && rm -rf dist/
+	rm -rf dist/
 
 .PHONY: build
 build:
-	rye build
+	uv build
 
-publish: build bundle upload clean
+publish:
+	viam module build start --version $(version)
+
+setup:
+	./setup.sh
+
+dist/archive.tar.gz: setup
+	./build.sh

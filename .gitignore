@@ -7,8 +7,10 @@ wheels/
 *.egg-info
 
 # venv
-.venv
+.venv*
+.ruff_cache
 
 # build & bundle files
 module.tar.gz
 .DS_Store
+main.spec
