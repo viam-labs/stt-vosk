@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 export PATH=$PATH:$HOME/.local/bin
-VENV_NAME=".venv-build"
 
 if [ ! "$(command -v uv)" ]; then
   if [ ! "$(command -v curl)" ]; then
@@ -19,9 +18,7 @@ if command -v brew >/dev/null 2>&1; then
   brew install portaudio
 fi
 
-uv venv --python 3.12 $VENV_NAME
-
-source $VENV_NAME/bin/activate
+uv venv --python 3.12
 
 uv sync
 uv pip install pyinstaller
