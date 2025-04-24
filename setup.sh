@@ -12,7 +12,7 @@ fi
 
 source ./first_run.sh
 
-uv venv --python 3.12
+uv venv --python 3.12 --system-site-packages
 
 uv sync
 uv pip install pyinstaller
