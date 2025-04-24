@@ -10,13 +10,7 @@ if [ ! "$(command -v uv)" ]; then
   curl -LsSf https://astral.sh/uv/install.sh | sh
 fi
 
-if command -v apt >/dev/null 2>&1; then
-  sudo apt install -qqy python3-pyaudio portaudio19-dev alsa-tools alsa-utils flac python3-dev clang ffmpeg
-fi
-
-if command -v brew >/dev/null 2>&1; then
-  brew install portaudio
-fi
+source ./first_run.sh
 
 uv venv --python 3.12
 
