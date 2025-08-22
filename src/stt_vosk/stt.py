@@ -43,7 +43,7 @@ class SttVosk(SpeechService, EasyResource):
         model_name = str(attrs.get("model_name", "vosk-model-small-en-us-0.15"))
         model_lang = str(attrs.get("model_lang", "en-us"))
         self.disable_mic = bool(attrs.get("disable_mic", False))
-        self.mic_device_name = str(attrs.get("mic__device_name", ""))
+        self.mic_device_name = str(attrs.get("mic_device_name", ""))
         self.recognizer = sr.Recognizer()
         self.recognizer.vosk_model = VoskModel(model_name=model_name, lang=model_lang)
 
