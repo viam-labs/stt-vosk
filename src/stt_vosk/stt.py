@@ -49,7 +49,7 @@ class SttVosk(SpeechService, EasyResource):
 
         if not self.disable_mic:
             mics = sr.Microphone.list_microphone_names()
-            
+            self.logger.info(f"Microphones: {mics}")
             if self.mic_device_name != "":
                 self.mic = sr.Microphone(mics.index(self.mic_device_name))
             else:
