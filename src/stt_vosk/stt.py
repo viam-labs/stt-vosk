@@ -43,13 +43,20 @@ class SttVosk(SpeechService, EasyResource):
         model_name = str(attrs.get("model_name", "vosk-model-small-en-us-0.15"))
         model_lang = str(attrs.get("model_lang", "en-us"))
         self.disable_mic = bool(attrs.get("disable_mic", False))
-        self.mic_name = str(attrs.get("mic_name", "default"))
+        self.mic_device_name = str(attrs.get("mic__device_name", "default"))
         self.recognizer = sr.Recognizer()
         self.recognizer.vosk_model = VoskModel(model_name=model_name, lang=model_lang)
 
         if not self.disable_mic:
+            mics = sr.Microphone.list_microphone_names()
+            
+            if self.mic_device_name != "":
+                self.mic = sr.Microphone(mics.index(self.mic_device_name))
+            else:
+                self.mic = sr.Microphone()
+                
             LOGGER.debug("Calibrating for ambient noise")
-            with sr.Microphone() as source:
+            with self.mic as source:
                 self.recognizer.adjust_for_ambient_noise(source)
 
     async def close(self):
@@ -71,7 +78,7 @@ class SttVosk(SpeechService, EasyResource):
             )
             return ""
 
-        with sr.Microphone() as source:
+        with self.mic as source:
             LOGGER.debug("Listening...")
             audio = self.recognizer.listen(source)
 
