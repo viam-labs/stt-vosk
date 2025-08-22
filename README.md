@@ -43,7 +43,7 @@ On the new component panel, copy and paste the following attribute template into
 {
   "model_name": "vosk-model-small-en-us-0.15",
   "model_lang": "en-us",
-  "mic_name": "default",
+  "mic_device_name": "default",
 }
 ```
 
@@ -57,7 +57,7 @@ The following attributes are available for the `viam-labs:speech:speechio` speec
 | ------- | ------ | ------------ | ----------- |
 | `model_name` | string | Optional |  The name of the pre-trained [Vosk model](https://alphacephei.com/vosk/models) to be used. Default: `"vosk-model-small-en-us-0.15"`.  |
 | `model_lang` | string | Optional |  The spoken language for the model to process. Default: `"en-us"`. |
-| `mic_name`  | string | Optional |  The name of the hardware device used for audio input if more than one is available. Default: `"default"`. |
+| `mic_device_name`  | string | Optional |  The name of the hardware device used for audio input if more than one is available. Default: `"default"`. |
 | `disable_mic`  | boolean | Optional | If true, will not configure any listening capabilities. This must be set to true if you do not have a valid microphone attached to your system. Default: `false`. |
 
 > [!NOTE]
