@@ -1,6 +1,6 @@
 [project]
 name = "stt-vosk"
-version = "0.2.2"
+version = "0.3.0"
 description = "A modular service that provides speech-to-text (STT) capabilities for machines running on the Viam platform."
 authors = [
     { name = "HipsterBrown", email = "headhipster@hipsterbrown.com" }
