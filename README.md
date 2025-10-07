@@ -43,7 +43,7 @@ On the new component panel, copy and paste the following attribute template into
 {
   "model_name": "vosk-model-small-en-us-0.15",
   "model_lang": "en-us",
-  "mic_device_name": "default",
+  "mic_device_name": "default"
 }
 ```
 
