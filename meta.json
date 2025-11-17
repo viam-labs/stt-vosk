@@ -9,9 +9,14 @@
       "model": "viam-labs:speech:stt-vosk",
       "markdown_link": "README.md#config",
       "short_description": "Provides speech-to-text(STT) capabilities through a local model"
+    },
+    {
+      "api": "rdk:component:sensor",
+      "model": "viam-labs:sensor:stt-vosk",
+      "markdown_link": "README.md#config",
+      "short_description": "Provides speech-to-text(STT) capabilities through a local model"
     }
   ],
-  "first_run": "./first_run.sh",
   "build": {
     "build": "./build.sh",
     "setup": "./setup.sh",

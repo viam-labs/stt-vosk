@@ -1,1 +1,1 @@
-from .stt import SttVosk
+from .stt import SttVosk, SttVoskSensor
