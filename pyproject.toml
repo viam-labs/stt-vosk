@@ -6,7 +6,7 @@ authors = [
     { name = "HipsterBrown", email = "headhipster@hipsterbrown.com" }
 ]
 dependencies = [
-    "viam-sdk>=0.40.0",
+    "viam-sdk>=0.79.1",
     "vosk==0.3.44",
     "speechrecognition>=3.10.1",
     "pyaudio>=0.2.14",
