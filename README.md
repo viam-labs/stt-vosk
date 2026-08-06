@@ -51,17 +51,26 @@ These are the default values for these fields, none are required to be set for t
 
 ### Attributes
 
-The following attributes are available for the `viam-labs:speech:speechio` speech service:
+The following attributes are available for the `viam-labs:speech:stt-vosk` speech service:
 
 | Name    | Type   | Inclusion    | Description |
 | ------- | ------ | ------------ | ----------- |
 | `model_name` | string | Optional |  The name of the pre-trained [Vosk model](https://alphacephei.com/vosk/models) to be used. Default: `"vosk-model-small-en-us-0.15"`.  |
 | `model_lang` | string | Optional |  The spoken language for the model to process. Default: `"en-us"`. |
-| `mic_device_name`  | string | Optional |  The name of the hardware device used for audio input if more than one is available. Default: `"default"`. |
-| `disable_mic`  | boolean | Optional | If true, will not configure any listening capabilities. This must be set to true if you do not have a valid microphone attached to your system. Default: `false`. |
+| `mic_device_name`  | string | Optional |  The name of the hardware device used for audio input. Use this to select a specific microphone by name. Default: `""`. |
+| `mic_device_index`  | integer | Optional |  The PyAudio device index for the microphone. Takes precedence over `mic_device_name`. Default: `null`. |
+| `disable_mic`  | boolean | Optional | If true, will not configure any listening capabilities. Set this to true if you do not have a valid microphone attached. Default: `false`. |
+| `suppress_alsa_errors`  | boolean | Optional | If true, suppresses ALSA error messages during device initialization (Linux only). Default: `true`. |
+| `listen_timeout`  | float | Optional | Maximum seconds to wait for speech to start. If no speech is detected within this time, returns empty string. Useful for polling scenarios. Default: `null` (wait indefinitely). |
+| `phrase_time_limit`  | float | Optional | Maximum seconds to record after speech starts. Useful to prevent overly long recordings. Default: `null` (no limit). |
+| `energy_threshold`  | integer | Optional | Microphone sensitivity level for speech detection. Lower values (e.g., 300) are more sensitive. Default: `null` (auto-calibrated). |
+| `pause_threshold`  | float | Optional | Seconds of silence to consider the phrase ended. Lower values make detection faster but may cut off speech. Default: `0.8`. |
 
 > [!NOTE]
-> For more information, see [Configure a Machine](https://docs.viam.com/manage/configuration/).
+> For detailed audio device configuration, especially for USB microphones on Linux, see [AUDIO_SETUP.md](AUDIO_SETUP.md).
+
+> [!NOTE]
+> For more information about machine configuration, see [Configure a Machine](https://docs.viam.com/manage/configuration/).
 
 ## Contributing
 

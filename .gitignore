@@ -14,3 +14,4 @@ wheels/
 module.tar.gz
 .DS_Store
 main.spec
+reload-*
