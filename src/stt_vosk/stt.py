@@ -54,7 +54,7 @@ class SttVosk(SpeechService, EasyResource):
                 self.mic = sr.Microphone(mics.index(self.mic_device_name))
             else:
                 self.mic = sr.Microphone()
-                
+
             LOGGER.debug("Calibrating for ambient noise")
             with self.mic as source:
                 self.recognizer.adjust_for_ambient_noise(source)
