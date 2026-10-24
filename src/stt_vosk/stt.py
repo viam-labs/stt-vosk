@@ -1,21 +1,20 @@
+import json
 from collections.abc import Mapping, Sequence
 from io import BytesIO
-import json
 from typing import ClassVar, Literal
-from typing_extensions import Self
 
+import speech_recognition as sr
 from pydub import AudioSegment
+from speech_service_api import SpeechService
+from typing_extensions import Self
 from viam.logging import getLogger
+from viam.proto.app.robot import ComponentConfig
 from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.easy_resource import EasyResource
-from viam.proto.app.robot import ComponentConfig
 from viam.resource.types import Model
 from viam.utils import struct_to_dict
-
-import speech_recognition as sr
 from vosk import Model as VoskModel
-from speech_service_api import SpeechService
 
 LOGGER = getLogger(__name__)
 

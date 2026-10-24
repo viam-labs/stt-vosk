@@ -1,10 +1,9 @@
 import asyncio
 from os import path
 
-from viam.robot.client import RobotClient
-from viam.logging import getLogger
-
 from speech_service_api import SpeechService
+from viam.logging import getLogger
+from viam.robot.client import RobotClient
 
 LOGGER = getLogger(__name__)
 AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "example.wav")
