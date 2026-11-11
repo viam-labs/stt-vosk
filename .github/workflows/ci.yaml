@@ -55,8 +55,16 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       # pyaudio builds against the PortAudio headers.
+      # GitHub-hosted runners list azure.archive.ubuntu.com first. When that
+      # host does not resolve, apt reports the failure for every mirror and
+      # the install never reaches archive.ubuntu.com.
       - name: Install system libraries
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends portaudio19-dev
+        run: |
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+          fi
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends portaudio19-dev
 
       - name: Install dependencies
         run: pip install .
