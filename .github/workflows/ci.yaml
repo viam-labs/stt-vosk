@@ -55,13 +55,21 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       # pyaudio builds against the PortAudio headers.
-      # GitHub-hosted runners list azure.archive.ubuntu.com first. When that
-      # host does not resolve, apt reports the failure for every mirror and
-      # the install never reaches archive.ubuntu.com.
+      # The runner's apt mirror list is only ubuntu.com hosts. When those
+      # names do not resolve, apt fails this step (actions/runner-images#15296).
+      # Prefer the kernel.org Ubuntu mirror in that case. apt still checks
+      # indexes and packages against Ubuntu's archive key.
       - name: Install system libraries
         run: |
-          if [ -f /etc/apt/apt-mirrors.txt ]; then
-            sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+          mirrors=/etc/apt/apt-mirrors.txt
+          fallback=http://mirrors.edge.kernel.org/ubuntu/
+          if [ -f "$mirrors" ] && ! timeout 15 getent hosts azure.archive.ubuntu.com >/dev/null 2>&1; then
+            echo 'Acquire::Retries "0";' | sudo tee /etc/apt/apt.conf.d/99-no-retries >/dev/null
+            {
+              printf '%s\tpriority:1\n' "$fallback"
+              awk -F'\t' 'NF { print $1 "\tpriority:" NR + 1 }' "$mirrors"
+            } | sudo tee "$mirrors.new" >/dev/null
+            sudo mv "$mirrors.new" "$mirrors"
           fi
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends portaudio19-dev
